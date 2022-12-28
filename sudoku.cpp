@@ -8,14 +8,14 @@
 Sudoku::Sudoku(QWidget *parent)
     : QWidget(parent)
 {
-    display = new QLineEdit("0");
+//    display = new QLineEdit("0");
 
-    display->setAlignment(Qt::AlignRight);
-    display->setMaxLength(10);
+//    display->setAlignment(Qt::AlignRight);
+//    display->setMaxLength(10);
 
-    QFont font = display->font();
-    font.setPointSize(font.pointSize() + 8);
-    display->setFont(font);
+//    QFont font = display->font();
+//    font.setPointSize(font.pointSize() + 8);
+//    display->setFont(font);
 
     boardLayout = new QGridLayout;
     boardLayout->setSpacing(0);

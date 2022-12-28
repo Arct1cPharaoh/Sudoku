@@ -2,6 +2,7 @@
 #define INPUT_H
 
 #include <QToolButton>
+#include <QFont>
 
 class Input : public QToolButton
 {
@@ -13,7 +14,7 @@ public:
     QSize sizeHint() const override;
 
 private:
-    int buttonSize = 75;
+    int buttonSize = 50;
 };
 
 #endif // INPUT_H

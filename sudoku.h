@@ -30,7 +30,7 @@ private:
 
     void createGrid(QGridLayout *boardLayout);
 
-    QLineEdit* display;
+    //QLineEdit* display;
 
     std::vector<std::vector<int>> grid{{0,0,5,3,6,0,4,0,0},
                                        {9,6,2,0,0,4,0,7,0},
