@@ -5,33 +5,45 @@
 #include <QLineEdit>
 #include <iostream> // Debug
 
+// Style
+#include <QSpacerItem>
+#include <QLine>
+
+void setupBounds(QGridLayout* mainLayout)
+{
+    QSpacerItem* hori;
+    hori = new QSpacerItem(1000,1, QSizePolicy::Preferred, QSizePolicy::Preferred);
+    mainLayout->addItem(hori,1,4);
+
+    QSpacerItem* hori2;
+    hori2 = new QSpacerItem(1000,1, QSizePolicy::Preferred, QSizePolicy::Preferred);
+    mainLayout->addItem(hori2,0,0);
+}
+
 Sudoku::Sudoku(QWidget *parent)
     : QWidget(parent)
 {
-//    display = new QLineEdit("0");
-
-//    display->setAlignment(Qt::AlignRight);
-//    display->setMaxLength(10);
-
-//    QFont font = display->font();
-//    font.setPointSize(font.pointSize() + 8);
-//    display->setFont(font);
-
-    boardLayout = new QGridLayout;
-    boardLayout->setSpacing(0);
-    boardLayout->setSizeConstraint(QLayout::SetFixedSize);
-
-    setLayout(boardLayout);
-
     setWindowTitle(tr("Sudoku!"));
 
+    mainLayout = new QGridLayout();
+    setLayout(mainLayout);
+
+    boardLayout = new QGridLayout();
+    boardLayout->setSpacing(0);
+    boardLayout->setSizeConstraint(QLayout::SetFixedSize);
+    mainLayout->addLayout(boardLayout, 1, 1);
     createGrid(boardLayout);
 
+    setupBounds(mainLayout);
+
+    operatorsLayout = new QGridLayout();
+    mainLayout->addLayout(operatorsLayout, 1, 3);
     solveButton = createInput("Solve", SLOT(solve()));
-    solveButton->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
-    boardLayout->addWidget(solveButton,1,10);
+    solveButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    operatorsLayout->addWidget(solveButton, 1, 1);
 
 }
+
 
 void Sudoku::createGrid(QGridLayout *boardLayout)
 {

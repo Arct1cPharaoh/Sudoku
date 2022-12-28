@@ -23,6 +23,8 @@ private slots:
     void solve();
 
 private:
+    QGridLayout* mainLayout;
+    QGridLayout* operatorsLayout;
     QGridLayout *boardLayout;
 
     Input* createInput(const QString &text, const char *member);
