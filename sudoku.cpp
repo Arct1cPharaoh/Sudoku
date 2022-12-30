@@ -7,71 +7,121 @@
 
 // Style
 #include <QSpacerItem>
-#include <QLine>
+#include <QFrame>
 
+// Creates endless spacing horizontaly around board so it dosen't scale weirdly
 void setupBounds(QGridLayout* mainLayout)
 {
-    QSpacerItem* hori;
-    hori = new QSpacerItem(1000,1, QSizePolicy::Preferred, QSizePolicy::Preferred);
-    mainLayout->addItem(hori,1,4);
+    QSpacerItem* horiRight;
+    horiRight = new QSpacerItem(1000,1, QSizePolicy::Preferred, QSizePolicy::Preferred);
+    mainLayout->addItem(horiRight,1,4);
 
-    QSpacerItem* hori2;
-    hori2 = new QSpacerItem(1000,1, QSizePolicy::Preferred, QSizePolicy::Preferred);
-    mainLayout->addItem(hori2,0,0);
+    QSpacerItem* horiLeft;
+    horiLeft = new QSpacerItem(1000,1, QSizePolicy::Preferred, QSizePolicy::Preferred);
+    mainLayout->addItem(horiLeft,0,0);
 }
 
-Sudoku::Sudoku(QWidget *parent)
-    : QWidget(parent)
+// Main function
+Sudoku::Sudoku(QWidget *parent) : QWidget(parent)
 {
     setWindowTitle(tr("Sudoku!"));
 
     mainLayout = new QGridLayout();
     setLayout(mainLayout);
 
+    // Setup board
     boardLayout = new QGridLayout();
     boardLayout->setSpacing(0);
     boardLayout->setSizeConstraint(QLayout::SetFixedSize);
     mainLayout->addLayout(boardLayout, 1, 1);
-    createGrid(boardLayout);
-
     setupBounds(mainLayout);
+
+    createGrid(boardLayout);
 
     operatorsLayout = new QGridLayout();
     mainLayout->addLayout(operatorsLayout, 1, 3);
+
     solveButton = createInput("Solve", SLOT(solve()));
     solveButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     operatorsLayout->addWidget(solveButton, 1, 1);
-
 }
 
+// Adds in vertical lines
+void addVerticalLines(int col, int rowSub, QGridLayout* currentGrid)
+{
+    // First left line
+    if (col == 0)
+    {
+        QFrame* lineBefore = new QFrame();
+        lineBefore->setGeometry(QRect());
+        lineBefore->setFrameShape(QFrame::VLine); // Replace by VLine for vertical line
+        currentGrid->addWidget(lineBefore,rowSub,0);
+    }
 
+    // Creates all other lines
+    QFrame* line = new QFrame();
+    line->setGeometry(QRect());
+    line->setFrameShape(QFrame::VLine); // Replace by VLine for vertical line
+    currentGrid->addWidget(line,rowSub,4);
+}
+
+// Adds in horizontal lines
+void addHorizontalLines(int row, QGridLayout* currentGrid)
+{
+    // Iterate thrice because three lines
+    for (int i = 1; i <= 3; ++i)
+    {
+        // TOp line
+        if (row == 0)
+        {
+            QFrame* lineBefore = new QFrame();
+            lineBefore->setGeometry(QRect());
+            lineBefore->setFrameShape(QFrame::HLine); // Replace by VLine for vertical line
+            currentGrid->addWidget(lineBefore,0,i);
+        }
+
+        // Creates all other lines
+        QFrame* line = new QFrame();
+        line->setGeometry(QRect());
+        line->setFrameShape(QFrame::HLine); // Replace by VLine for vertical line
+        currentGrid->addWidget(line,4,i);
+    }
+}
+
+// Creates sudoku grid in a sub-grid style
 void Sudoku::createGrid(QGridLayout *boardLayout)
 {
-    //Each Subset of inputs
+    QGridLayout* subGrids[9];
+    subGrids[0] = new QGridLayout();
+    QGridLayout* currentGrid = subGrids[0];
+
+    int gridCount = 0;
     int countInputs = 0;
     for (int row = 0; row < 9; row+=3)
-    {
         for (int col = 0; col < 9; col +=3)
         {
             for (int rowSub = 1; rowSub <= 3; ++rowSub)
+            {
                 for (int colSub = 1; colSub <= 3; ++colSub)
                 {
                     int x = (rowSub + row);
                     int y = (colSub + col);
                     if (grid[x - 1][y - 1] == 0)
-                    {
                         inputs[countInputs] = createInput("", SLOT(inputClicked()));
-                    }
                     else
-                    {
                         inputs[countInputs] = createSetInput(QString::number(grid[x - 1][y - 1]));
-                        inputs[countInputs]->setEnabled(false);
-                    }
-                    boardLayout->addWidget(inputs[countInputs], x, y);
+                    currentGrid->addWidget(inputs[countInputs], rowSub, colSub);
                     countInputs++;
                 }
+                addVerticalLines(col, rowSub, currentGrid);
+            }
+            addHorizontalLines(row, currentGrid);
+
+            ++gridCount;
+            boardLayout->addLayout(currentGrid, row, col);
+            subGrids[gridCount] = new QGridLayout();
+            currentGrid = subGrids[gridCount];
         }
-    }
 }
 
 // Select a number
@@ -121,51 +171,41 @@ void Sudoku::inputClicked()
         }
 }
 
+// What happens when you win
 void Sudoku::winState()
 {
-    if (solved)
-    {
-        solveButton->setText("Win");
-        for (int i = 0; i < 81; ++i)
-            inputs[i]->setEnabled(false);
-    }
-    else
-    {
-        solveButton->setText("Not yet");
-    }
+    solveButton->setText("Win");
+    // Locks every button
+    for (int i = 0; i < 81; ++i)
+        inputs[i]->setEnabled(false);
 }
 
+// Check if the board is solved
 void Sudoku::solve()
 {
-    solved = true;
     int countInputs = 0;
+    // Checks if every cel maches answer
     for (int row = 0; row < 9; row+=3)
-    {
         for (int col = 0; col < 9; col +=3)
-        {
             for (int rowSub = 1; rowSub <= 3; ++rowSub)
-            {
                 for (int colSub = 1; colSub <= 3; ++colSub)
                 {
                     int x = (rowSub + row);
                     int y = (colSub + col);
 
                     int inputNum = inputs[countInputs]->text().split(" ")[0].toInt();
+                    // Check to se if something dosen't match
                     if (inputNum != answer[x - 1][y - 1])
                     {
-                        solved = false;
-                        winState();
+                        solveButton->setText("Not yet");
                         return;
                     }
                     countInputs++;
                 }
-            }
-        }
-    }
-
     winState();
 }
 
+// Creates an input button
 Input* Sudoku::createInput(const QString &text, const char *member)
 {
     Input* input = new Input(text);
@@ -173,8 +213,10 @@ Input* Sudoku::createInput(const QString &text, const char *member)
     return input;
 }
 
+// Creates non-usable input button
 Input* Sudoku::createSetInput(const QString &text)
 {
     Input* set = new Input(text);
+    set->setEnabled(false);
     return set;
 }

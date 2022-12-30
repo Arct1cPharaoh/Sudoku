@@ -23,17 +23,20 @@ private slots:
     void solve();
 
 private:
+    // Main layouts
     QGridLayout* mainLayout;
     QGridLayout* operatorsLayout;
     QGridLayout *boardLayout;
 
+    // Setup
+    void createGrid(QGridLayout *boardLayout);
+
+    // Button making
     Input* createInput(const QString &text, const char *member);
     Input* createSetInput(const QString &text);
 
-    void createGrid(QGridLayout *boardLayout);
-
-    //QLineEdit* display;
-
+    // Grid and answer
+    // Might come from somewhere else in furture, temporary
     std::vector<std::vector<int>> grid{{0,0,5,3,6,0,4,0,0},
                                        {9,6,2,0,0,4,0,7,0},
                                        {3,0,4,0,2,9,0,6,0},
@@ -54,6 +57,7 @@ private:
                                          {2,1,8,6,9,3,7,4,5},
                                          {7,5,3,4,8,2,1,9,6}};
 
+    // Member Variables
     int NumInputs = 81;
     enum { squares = 9 };
     Input* inputs[81];
@@ -63,7 +67,6 @@ private:
     Input* nums[9];
 
     Input* solveButton;
-    bool solved = false;
     void winState();
 };
 #endif // SUDOKU_H
