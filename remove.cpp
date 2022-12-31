@@ -261,7 +261,7 @@ findBoard(std::vector<std::vector<int>>& answer)
 		puzzle[randX][randY] = 0;
 	}
     assert(solve(preveousPuzzle, useless) == 1);
-    //answer = puzzle;
+    answer = puzzle;
 	return preveousPuzzle;
 }
 
