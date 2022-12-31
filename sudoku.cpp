@@ -1,9 +1,13 @@
 #include "sudoku.h"
 #include "input.h"
+#include "remove.h"
 
 #include <QGridLayout>
 #include <QLineEdit>
 #include <iostream> // Debug
+
+#include <QProcess>
+#include <QApplication>
 
 // Style
 #include <QSpacerItem>
@@ -24,6 +28,7 @@ void setupBounds(QGridLayout* mainLayout)
 // Main function
 Sudoku::Sudoku(QWidget *parent) : QWidget(parent)
 {
+    grid = findBoard(answer);
     setWindowTitle(tr("Sudoku!"));
 
     mainLayout = new QGridLayout();
@@ -44,6 +49,11 @@ Sudoku::Sudoku(QWidget *parent) : QWidget(parent)
     solveButton = createInput("Solve", SLOT(solve()));
     solveButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     operatorsLayout->addWidget(solveButton, 1, 1);
+
+    Input* genButton;
+    genButton = createInput("New", SLOT(generate()));
+    genButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    operatorsLayout->addWidget(genButton, 2, 1);
 }
 
 // Adds in vertical lines
@@ -203,6 +213,13 @@ void Sudoku::solve()
                     countInputs++;
                 }
     winState();
+}
+
+// Generates new board
+void Sudoku::generate()
+{
+    QProcess::startDetached(QApplication::applicationFilePath());
+    exit(12);
 }
 
 // Creates an input button

@@ -18,6 +18,7 @@ set(PROJECT_SOURCES
         sudoku.h
         sudoku.ui
         input.h input.cpp
+        remove.h remove.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
