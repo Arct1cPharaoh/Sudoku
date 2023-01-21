@@ -3,6 +3,8 @@
 
 #include <QToolButton>
 #include <QFont>
+#include <QKeyEvent>
+#include "sudoku.h"
 
 class Input : public QToolButton
 {
@@ -13,8 +15,12 @@ public:
 
     QSize sizeHint() const override;
 
+
+    void keyPressEvent(QKeyEvent *event) override;
+
 private:
     int buttonSize = 50;
+    bool activeInput = false;
 };
 
 #endif // INPUT_H

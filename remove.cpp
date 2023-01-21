@@ -248,6 +248,7 @@ findBoard(std::vector<std::vector<int>>& answer)
         puzzle.push_back(a);
     }
     recursiveGenerator(puzzle);
+    answer = puzzle;
 
     srand (time(NULL)); // Set seed
 
@@ -261,7 +262,7 @@ findBoard(std::vector<std::vector<int>>& answer)
 		puzzle[randX][randY] = 0;
 	}
     assert(solve(preveousPuzzle, useless) == 1);
-    answer = puzzle;
+    print(answer);
 	return preveousPuzzle;
 }
 

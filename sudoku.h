@@ -17,6 +17,8 @@ class Sudoku : public QWidget
 public:
     Sudoku(QWidget *parent = nullptr);
 
+    friend class Input;
+
 private slots:
     void numSelect();
     void inputClicked();
@@ -34,6 +36,7 @@ private:
 
     // Button making
     Input* createInput(const QString &text, const char *member);
+    Input* createSolve(const QString &text, const char *member);
     Input* createSetInput(const QString &text);
 
     // Grid and answer

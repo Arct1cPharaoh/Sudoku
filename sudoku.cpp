@@ -8,6 +8,7 @@
 
 #include <QProcess>
 #include <QApplication>
+#include <QKeyEvent>
 
 // Style
 #include <QSpacerItem>
@@ -17,11 +18,11 @@
 void setupBounds(QGridLayout* mainLayout)
 {
     QSpacerItem* horiRight;
-    horiRight = new QSpacerItem(1000,1, QSizePolicy::Preferred, QSizePolicy::Preferred);
+    horiRight = new QSpacerItem(10000,1, QSizePolicy::Preferred, QSizePolicy::Preferred);
     mainLayout->addItem(horiRight,1,4);
 
     QSpacerItem* horiLeft;
-    horiLeft = new QSpacerItem(1000,1, QSizePolicy::Preferred, QSizePolicy::Preferred);
+    horiLeft = new QSpacerItem(10000,1, QSizePolicy::Preferred, QSizePolicy::Preferred);
     mainLayout->addItem(horiLeft,0,0);
 }
 
@@ -46,14 +47,16 @@ Sudoku::Sudoku(QWidget *parent) : QWidget(parent)
     operatorsLayout = new QGridLayout();
     mainLayout->addLayout(operatorsLayout, 1, 3);
 
-    solveButton = createInput("Solve", SLOT(solve()));
+    solveButton = createSolve("Solve", SLOT(solve()));
     solveButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     operatorsLayout->addWidget(solveButton, 1, 1);
 
     Input* genButton;
-    genButton = createInput("New", SLOT(generate()));
+    genButton = createSolve("New", SLOT(generate()));
     genButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     operatorsLayout->addWidget(genButton, 2, 1);
+
+    this->setStyleSheet("QWidget { background: #1e1e1e; }");
 }
 
 // Adds in vertical lines
@@ -155,30 +158,35 @@ void Sudoku::numSelect()
 // Input button down
 void Sudoku::inputClicked()
 {
+    Input* clicked = qobject_cast<Input*>(sender());
+
     // Check for active button
     if (activeInput)
     {
-        // Delete the previous overlay
-        for (int i = 0; i < 9; ++i)
-            delete nums[i];
-        delete subLayout;
+//        // Delete the previous overlay
+//        for (int i = 0; i < 9; ++i)
+//            delete nums[i];
+//        delete subLayout;
+        clicked->setStyleSheet("QToolButton { background: #a4c4e3;}");
     }
     activeInput = true;
 
-    Input* clicked = qobject_cast<Input*>(sender());
+    // Keyboard input
+    clicked->setFocus();
+    //clicked->setStyleSheet("QToolButton { background: #7c9ff7;}");
 
-    // Creating a new layer for buttons
-    subLayout = new QGridLayout(clicked);
-    subLayout->setSpacing(0);
+//    // Creating a new layer for buttons
+//    subLayout = new QGridLayout(clicked);
+//    subLayout->setSpacing(0);
 
-    int i = 0;
-    for (int row = 0; row < 3; ++row)
-        for (int col = 0; col < 3; ++col)
-        {
-            nums[i] = createInput(QString::number(i + 1), SLOT(numSelect()));
-            subLayout->addWidget(nums[i], row, col);
-            ++i;
-        }
+//    int i = 0;
+//    for (int row = 0; row < 3; ++row)
+//        for (int col = 0; col < 3; ++col)
+//        {
+//            nums[i] = createInput(QString::number(i + 1), SLOT(numSelect()));
+//            subLayout->addWidget(nums[i], row, col);
+//            ++i;
+//        }
 }
 
 // What happens when you win
@@ -207,7 +215,7 @@ void Sudoku::solve()
                     // Check to se if something dosen't match
                     if (inputNum != answer[x - 1][y - 1])
                     {
-                        solveButton->setText("Not yet");
+                        solveButton->setText("Wrong");
                         return;
                     }
                     countInputs++;
@@ -227,6 +235,17 @@ Input* Sudoku::createInput(const QString &text, const char *member)
 {
     Input* input = new Input(text);
     connect(input, SIGNAL(clicked()), this, member);
+    input->setStyleSheet("QWidget { background: #e0e0e0; }");
+    input->setCursor(Qt::PointingHandCursor);
+    return input;
+}
+
+Input* Sudoku::createSolve(const QString &text, const char *member)
+{
+    Input* input = new Input(text);
+    connect(input, SIGNAL(clicked()), this, member);
+    input->setStyleSheet("QWidget { background: #FAF9F6; border-radius: 15px; }");
+    input->setCursor(Qt::PointingHandCursor);
     return input;
 }
 
@@ -235,5 +254,6 @@ Input* Sudoku::createSetInput(const QString &text)
 {
     Input* set = new Input(text);
     set->setEnabled(false);
+    set->setStyleSheet("QWidget { background: #d3d3d3; }");
     return set;
 }
