@@ -3,6 +3,7 @@
 #include <iostream>
 #include <cassert>
 
+// For debugging
 void print(const std::vector<std::vector<int>>& grid)
 { // Simple print function with ASCII art
     std::cout << "+++++++++++++++++++++++++++++++++++++" << std::endl;
@@ -229,7 +230,7 @@ void generatePuzzle(std::vector<std::vector<int>>& puzzle, std::vector<std::vect
                 numFilled--;
                 show[changeX][changeY] = 0;
             }
-            std::cout << "Changing Solution" << std::endl;
+            // std::cout << "Changing Solution" << std::endl;
         }
         show[changeX][changeY] = puzzle[changeX][changeY];
         if(numFilled <= 41)
@@ -262,7 +263,7 @@ findBoard(std::vector<std::vector<int>>& answer)
 		puzzle[randX][randY] = 0;
 	}
     assert(solve(preveousPuzzle, useless) == 1);
-    print(answer);
+    //print(answer);
 	return preveousPuzzle;
 }
 

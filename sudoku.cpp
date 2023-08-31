@@ -28,7 +28,7 @@ void setupBounds(QGridLayout* mainLayout)
 
 // Main function
 Sudoku::Sudoku(QWidget *parent) : QWidget(parent)
-{
+{   
     grid = findBoard(answer);
     setWindowTitle(tr("Sudoku!"));
 
@@ -66,6 +66,7 @@ void addVerticalLines(int col, int rowSub, QGridLayout* currentGrid)
     if (col == 0)
     {
         QFrame* lineBefore = new QFrame();
+        lineBefore->setStyleSheet("QFrame { color: #FAF9F6; }");
         lineBefore->setGeometry(QRect());
         lineBefore->setFrameShape(QFrame::VLine); // Replace by VLine for vertical line
         currentGrid->addWidget(lineBefore,rowSub,0);
@@ -73,6 +74,7 @@ void addVerticalLines(int col, int rowSub, QGridLayout* currentGrid)
 
     // Creates all other lines
     QFrame* line = new QFrame();
+    line->setStyleSheet("QFrame { color: #FAF9F6; }");
     line->setGeometry(QRect());
     line->setFrameShape(QFrame::VLine); // Replace by VLine for vertical line
     currentGrid->addWidget(line,rowSub,4);
@@ -88,6 +90,7 @@ void addHorizontalLines(int row, QGridLayout* currentGrid)
         if (row == 0)
         {
             QFrame* lineBefore = new QFrame();
+            lineBefore->setStyleSheet("QFrame { color: #FAF9F6; }");
             lineBefore->setGeometry(QRect());
             lineBefore->setFrameShape(QFrame::HLine); // Replace by VLine for vertical line
             currentGrid->addWidget(lineBefore,0,i);
@@ -95,6 +98,7 @@ void addHorizontalLines(int row, QGridLayout* currentGrid)
 
         // Creates all other lines
         QFrame* line = new QFrame();
+        line->setStyleSheet("QFrame { color: #FAF9F6; }");
         line->setGeometry(QRect());
         line->setFrameShape(QFrame::HLine); // Replace by VLine for vertical line
         currentGrid->addWidget(line,4,i);
@@ -132,6 +136,7 @@ void Sudoku::createGrid(QGridLayout *boardLayout)
 
             ++gridCount;
             boardLayout->addLayout(currentGrid, row, col);
+            boardLayout->setSpacing(5);
             subGrids[gridCount] = new QGridLayout();
             currentGrid = subGrids[gridCount];
         }
@@ -163,30 +168,39 @@ void Sudoku::inputClicked()
     // Check for active button
     if (activeInput)
     {
-//        // Delete the previous overlay
-//        for (int i = 0; i < 9; ++i)
-//            delete nums[i];
-//        delete subLayout;
-        clicked->setStyleSheet("QToolButton { background: #a4c4e3;}");
+        // Delete the previous overlay
+        for (int i = 0; i < 9; ++i)
+            delete nums[i];
+        delete subLayout;
     }
     activeInput = true;
 
     // Keyboard input
     clicked->setFocus();
-    //clicked->setStyleSheet("QToolButton { background: #7c9ff7;}");
+    connect(clicked, SIGNAL(keyPressed()), this, SLOT(handleKeyPress()));
 
-//    // Creating a new layer for buttons
-//    subLayout = new QGridLayout(clicked);
-//    subLayout->setSpacing(0);
+    // Creating a new layer for buttons
+    subLayout = new QGridLayout(clicked);
+    subLayout->setSpacing(0);
 
-//    int i = 0;
-//    for (int row = 0; row < 3; ++row)
-//        for (int col = 0; col < 3; ++col)
-//        {
-//            nums[i] = createInput(QString::number(i + 1), SLOT(numSelect()));
-//            subLayout->addWidget(nums[i], row, col);
-//            ++i;
-//        }
+    int i = 0;
+    for (int row = 0; row < 3; ++row)
+        for (int col = 0; col < 3; ++col)
+        {
+            nums[i] = createInput(QString::number(i + 1), SLOT(numSelect()));
+            subLayout->addWidget(nums[i], row, col);
+            ++i;
+        }
+}
+
+void Sudoku::handleKeyPress() {
+    // Delete the overlay
+    if (activeInput) {
+        for (int i = 0; i < 9; ++i)
+            delete nums[i];
+        delete subLayout;
+    }
+    activeInput = false;
 }
 
 // What happens when you win
@@ -235,16 +249,7 @@ Input* Sudoku::createInput(const QString &text, const char *member)
 {
     Input* input = new Input(text);
     connect(input, SIGNAL(clicked()), this, member);
-    input->setStyleSheet("QWidget { background: #e0e0e0; }");
-    input->setCursor(Qt::PointingHandCursor);
-    return input;
-}
-
-Input* Sudoku::createSolve(const QString &text, const char *member)
-{
-    Input* input = new Input(text);
-    connect(input, SIGNAL(clicked()), this, member);
-    input->setStyleSheet("QWidget { background: #FAF9F6; border-radius: 15px; }");
+    input->setStyleSheet("QWidget { background: #e0e0e0; border-radius: 10px; }");
     input->setCursor(Qt::PointingHandCursor);
     return input;
 }
@@ -254,6 +259,15 @@ Input* Sudoku::createSetInput(const QString &text)
 {
     Input* set = new Input(text);
     set->setEnabled(false);
-    set->setStyleSheet("QWidget { background: #d3d3d3; }");
+    set->setStyleSheet("QWidget { background: #d3d3d3; border-radius: 10px;}");
     return set;
+}
+
+Input* Sudoku::createSolve(const QString &text, const char *member)
+{
+    Input* input = new Input(text);
+    connect(input, SIGNAL(clicked()), this, member);
+    input->setStyleSheet("QWidget { background: #FAF9F6; border-radius: 10px; }");
+    input->setCursor(Qt::PointingHandCursor);
+    return input;
 }

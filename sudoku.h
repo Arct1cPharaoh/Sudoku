@@ -18,7 +18,8 @@ public:
     Sudoku(QWidget *parent = nullptr);
 
     friend class Input;
-
+public slots:
+    void handleKeyPress();
 private slots:
     void numSelect();
     void inputClicked();

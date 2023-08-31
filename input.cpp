@@ -52,15 +52,6 @@ void Input::keyPressEvent(QKeyEvent *event) {
         this->setText("");
     }
 
-    this->setStyleSheet("QToolButton { background: #e0e0e0;}");
-
-//    // Delete the overlay
-//    // Check for active button
-//    if (s.activeInput)
-//    {
-//        for (int i = 0; i < 9; ++i)
-//            delete s.nums[i];
-//        delete s.subLayout;
-//    }
-    //activeInput = false;
+    // Delete the overlay
+    emit keyPressed();
 }
