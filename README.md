@@ -6,7 +6,7 @@
 ## Controls
 There are two control options.
 * **Mouse**: By clicking an editable squar with your mouse a 3 by 3 will apear with all 9 choosable numbers. Once clicked the number will apear in the square.
-* **Keyboard**: By seleccting a editable sqare with your mouse you can then just enter a number on your keyboard or numbpad and it will apear in the square. 0 to delete the current number.
+* **Keyboard**: By selecting a editable sqare with your mouse you can then just enter a number on your keyboard or numbpad and it will apear in the square. 0 to delete the current number.
 ![2023-08-30-21-53-03](https://github.com/Arct1cPharaoh/Sudoku/assets/78323370/f59fffe5-a787-45bd-8962-6585e1e28828)
 ## Install
 * Download the installer from GitHub release.
