@@ -9,3 +9,5 @@ There are two control options.
 * **Keyboard**: By seleccting a editable sqare with your mouse you can then just enter a number on your keyboard or numbpad and it will apear in the square. 0 to delete the current number.
 ![2023-08-30-21-53-03](https://github.com/Arct1cPharaoh/Sudoku/assets/78323370/f59fffe5-a787-45bd-8962-6585e1e28828)
 ## Install
+* Download the installer from GitHub release.
+* Run Installer.
